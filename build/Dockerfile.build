@@ -1,0 +1,28 @@
+FROM ubuntu:22.04
+
+# Install dependencies and Maven
+RUN apt-get update && \
+    apt-get install -y \
+        openjdk-17-jdk \
+        maven \
+        git \
+        curl \
+        sudo \
+        unzip \
+        vim && \
+    apt-get clean
+
+# Set JAVA_HOME and MAVEN_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV MAVEN_HOME=/usr/share/maven
+ENV PATH=$PATH:$MAVEN_HOME/bin
+
+# Optional: Create a user for Jenkins or development
+RUN useradd -m -d /home/jenkins -s /bin/bash jenkins && \
+    echo "jenkins ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Set working directory
+WORKDIR /home/jenkins
+
+# Default command
+CMD ["mvn", "-version"]
